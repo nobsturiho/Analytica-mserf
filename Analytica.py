@@ -69,26 +69,26 @@ if add_sidebar == 'Data_Cleaning':
                 df = fx.Mushanga(df)
             #Data Cleaning for Butuuro SACCO                   
             elif df['lender'].iloc[0] == 'Butuuro SACCO':
-               df = fx.Butuuro(df)
+                df = fx.Butuuro(df)
             #Data Cleaning for Premier Credit 
-            elif df['lender'].iloc[0] == 'Premier Credit':
-               df = fx.Premier(df)
+            elif df['lender'].iloc[0] == 'Premier Credit':            
+                df = fx.Premier(df)
                 
             #Data Cleaning for Finca
             elif df['lender'].iloc[0] == 'FINCA Uganda':
-               df = fx.Finca(df)
+                df = fx.Finca(df)
                 
             #Data Cleaning for Lyamujungu SACCO
             elif df['lender'].iloc[0] == 'Lyamujungu SACCO':
-               df = fx.Lyamujungu(df)
+                df = fx.Lyamujungu(df)
                                 
             #Data Cleaning Code for Flow Uganda                   
             elif df['lender'].iloc[0] == 'Flow Uganda':
-               df = fx.Flow(df)
+                df = fx.Flow(df)
 
             #Data Cleaning Code for Vision Fund                   
             elif df['lender'].iloc[0] == 'Vision Fund':
-               df = fx.VF(df)
+                df = fx.VF(df)
 
                 
             #Data Cleaning Code for Other PFI                  
