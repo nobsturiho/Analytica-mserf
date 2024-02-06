@@ -495,8 +495,8 @@ def Mushanga(df):
                         break  
     except Exception as e:
         st.write(e)                    
-
-
+    return df
+#End of Mushanga code
 
 
     ##Butuuro Sacco Data Cleaning Code
