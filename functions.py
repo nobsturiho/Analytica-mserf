@@ -665,8 +665,8 @@ def Mushanga(df):
                             break  # Exit the loop once a Region is identified for the current row
         except Exception as e:
             st.write(e)
-    ##End Butuuro Sacco
-    return df
+        ##End Butuuro Sacco
+        return df
 
 
 
