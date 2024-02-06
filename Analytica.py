@@ -104,8 +104,10 @@ if add_sidebar == 'Data_Cleaning':
                 st.write('The shape is: ',df.shape)
             except Exception as e:
                 print(e)
-            st.write(df.head())
-            
+            try:
+                st.write(df.head())
+            except Exception as e:
+                print(e)
             
             #Export Clean File
             st.subheader('Export Clean File')
