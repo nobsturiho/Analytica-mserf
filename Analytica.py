@@ -100,7 +100,10 @@ if add_sidebar == 'Data_Cleaning':
 
             #Print the cleaned dataframe
             st.subheader('Preview the Clean Data')
-            st.write('The shape is: ',df.shape)
+            try:
+                st.write('The shape is: ',df.shape)
+            except Exception as e:
+                print(e)
             st.write(df.head())
             
             
