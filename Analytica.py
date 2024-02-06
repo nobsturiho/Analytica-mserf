@@ -63,16 +63,17 @@ if add_sidebar == 'Data_Cleaning':
         if st.button("Click to Clean Data"):
             
             #Clean the data
-            #Data Cleaning for Premier Credit 
-            if df['lender'].iloc[0] == 'Premier Credit':            
-                df = fx.Premier(df)
+
             #Data Cleaning for Mushanga SACCO 
-            elif df['lender'].iloc[0] == 'Mushanga SACCO':
+            if df['lender'].iloc[0] == 'Mushanga SACCO':
                 df = fx.Mushanga(df)
             #Data Cleaning for Butuuro SACCO                   
             elif df['lender'].iloc[0] == 'Butuuro SACCO':
                  df = fx.Butuuro(df)
-
+            #Data Cleaning for Premier Credit 
+            elif df['lender'].iloc[0] == 'Premier Credit':            
+                df = fx.Premier(df)
+                
             #Data Cleaning for Finca
             elif df['lender'].iloc[0] == 'FINCA Uganda':
                 df = fx.Finca(df)
