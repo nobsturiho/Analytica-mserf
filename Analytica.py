@@ -9,6 +9,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import functions as fx
+import functions2 as gx
    
 
 #Develop DashBoard
@@ -63,9 +64,12 @@ if add_sidebar == 'Data_Cleaning':
         if st.button("Click to Clean Data"):
             
             #Clean the data
+            #Data Cleaning for Letshego 
+            if df['lender'].iloc[0] == 'Letshego Uganda':
+                df = gx.letshego(df)
 
             #Data Cleaning for Mushanga SACCO 
-            if df['lender'].iloc[0] == 'Mushanga SACCO':
+            elif df['lender'].iloc[0] == 'Mushanga SACCO':
                 df = fx.Mushanga(df)
             #Data Cleaning for Butuuro SACCO                   
             elif df['lender'].iloc[0] == 'Butuuro SACCO':
