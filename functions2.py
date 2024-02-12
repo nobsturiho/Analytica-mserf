@@ -12,47 +12,141 @@ import numpy as np
 def pride(df):
     dfMonthly=df
     deleted_columns=['id','NIN','Phone_number','name_of_borrower','email_of_borrower','highest_education_level','employment_status','created','Age','Loan_term_value']
-    dfMonthly=dfMonthly.drop(columns=deleted_columns)
-    dfMonthly['Loan_ID'] = dfMonthly['Loan_ID'].astype(str)
-    dfMonthly['Borrower_ID'] = dfMonthly['Borrower_ID'].astype(str)
-    dfMonthly['Sector'] = dfMonthly['Line_of_business'] +' '+ dfMonthly['Loan_purpose']
-    #columns_delete=['Line_of_business','Loan_purpose']
-    dfMonthly = dfMonthly.drop(columns=['Line_of_business','Loan_purpose'])
-    dfMonthly['Gender'] = dfMonthly['Gender'].replace('F','Female')
-    dfMonthly['Gender'] = dfMonthly['Gender'].replace('M','Male')
-    dfMonthly['Date_of_birth'] = pd.to_datetime(dfMonthly['Date_of_birth'])
-    dfMonthly['Date_of_loan_issue'] = pd.to_datetime(dfMonthly['Date_of_loan_issue'])
-    dfMonthly['Age'] = dfMonthly['Date_of_loan_issue'].dt.year - dfMonthly['Date_of_birth'].dt.year
-    dfMonthly = dfMonthly.drop(columns=['Date_of_birth'])
-    dfMonthly['Date_of_repayments_commencement'] = pd.to_datetime(dfMonthly['Date_of_repayments_commencement'])
-    dfMonthly['Tenure_of_loan'] = dfMonthly['Tenure_of_loan'] / 4.286
-    dfMonthly['Tenure_of_loan'] = dfMonthly['Tenure_of_loan'].astype(int)
-    dfMonthly['Interest_rate'] = dfMonthly['Interest_rate'].replace(18,0.31)
-    dfMonthly['Loan_type'] = dfMonthly['Loan_type'].replace('GROUP LOAN','Group')
-    dfMonthly['Expected_number_of_installments'] = dfMonthly['Expected_number_of_installments'].astype(int)
-    dfMonthly['Expected_monthly_installment'] = dfMonthly['Expected_monthly_installment'].astype(int)
-    dfMonthly['Number_of_employees'] = dfMonthly['Number_of_employees'].str.replace(" employees", "")
-    dfMonthly['Number_of_employees'] = dfMonthly['Number_of_employees'].str.replace(" employee", "")
-    dfMonthly['Number_of_employees'] = dfMonthly['Number_of_employees'].str.replace("2-4","3")
-    dfMonthly['Number_of_employees'] = dfMonthly['Number_of_employees'].str.replace("5-15","10")
-    dfMonthly['Number_of_employees'] = dfMonthly['Number_of_employees'].str.replace("16-30","23")
-    dfMonthly['Number_of_employees']=dfMonthly['Number_of_employees'].fillna(0)
-    dfMonthly['Number_of_employees'] = pd.to_numeric(dfMonthly['Number_of_employees'])
-    dfMonthly['Length_of_time_running'] = dfMonthly['Length_of_time_running'].str.replace(" years", "")
+    try:
+        dfMonthly=dfMonthly.drop(columns=deleted_columns)
+    except Exception as e:
+        st.write(e)
+    try:
+        dfMonthly['Loan_ID'] = dfMonthly['Loan_ID'].astype(str)
+    except Exception as e:
+        st.write(e)
+    try:
+        dfMonthly['Borrower_ID'] = dfMonthly['Borrower_ID'].astype(str)
+    except Exception as e:
+        st.write(e)
+    try:
+        dfMonthly['Sector'] = dfMonthly['Line_of_business'] +' '+ dfMonthly['Loan_purpose']
+    except Exception as e:
+         st.write(e)
+    try:    
+        dfMonthly = dfMonthly.drop(columns=['Line_of_business','Loan_purpose'])
+    except Exception as e:
+        st.write(e)
+    try:
+        dfMonthly['Gender'] = dfMonthly['Gender'].replace('F','Female')
+    except Exception as e:
+         st.write(e)
+    try:
+         dfMonthly['Gender'] = dfMonthly['Gender'].replace('M','Male')
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly['Date_of_birth'] = pd.to_datetime(dfMonthly['Date_of_birth'])
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly['Date_of_loan_issue'] = pd.to_datetime(dfMonthly['Date_of_loan_issue'])
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly['Age'] = dfMonthly['Date_of_loan_issue'].dt.year - dfMonthly['Date_of_birth'].dt.year
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly = dfMonthly.drop(columns=['Date_of_birth'])
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly['Date_of_repayments_commencement'] = pd.to_datetime(dfMonthly['Date_of_repayments_commencement'])
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly['Tenure_of_loan'] = dfMonthly['Tenure_of_loan'] / 4.286
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly['Tenure_of_loan'] = dfMonthly['Tenure_of_loan'].astype(int)
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly['Interest_rate'] = dfMonthly['Interest_rate'].replace(18,0.31)
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly['Loan_type'] = dfMonthly['Loan_type'].replace('GROUP LOAN','Group')
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly['Expected_number_of_installments'] = dfMonthly['Expected_number_of_installments'].astype(int)
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly['Expected_monthly_installment'] = dfMonthly['Expected_monthly_installment'].astype(int)
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly['Number_of_employees'] = dfMonthly['Number_of_employees'].str.replace(" employees", "")
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly['Number_of_employees'] = dfMonthly['Number_of_employees'].str.replace(" employee", "")
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly['Number_of_employees'] = dfMonthly['Number_of_employees'].str.replace("2-4","3")
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly['Number_of_employees'] = dfMonthly['Number_of_employees'].str.replace("5-15","10")
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly['Number_of_employees'] = dfMonthly['Number_of_employees'].str.replace("16-30","23")
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly['Number_of_employees']=dfMonthly['Number_of_employees'].fillna(0)
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly['Number_of_employees'] = pd.to_numeric(dfMonthly['Number_of_employees'])
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly['Length_of_time_running'] = dfMonthly['Length_of_time_running'].str.replace(" years", "")
     
-    dfMonthly['Length_of_time_running'] = dfMonthly['Length_of_time_running'].replace("1 - 3","2")
-    dfMonthly['Length_of_time_running'] = dfMonthly['Length_of_time_running'].replace("4 - 5","4")
-    dfMonthly['Length_of_time_running'] = dfMonthly['Length_of_time_running'].replace("6 - 10","8")
-    dfMonthly['Length_of_time_running'] = dfMonthly['Length_of_time_running'].replace("Less than 1 year","1")
-    dfMonthly['Length_of_time_running'] = dfMonthly['Length_of_time_running'].replace("More than 10 years","10")
-    dfMonthly['Length_of_time_running'] = dfMonthly['Length_of_time_running'].replace("More than 10","10")
-    
-    dfMonthly['Length_of_time_running'] = dfMonthly['Length_of_time_running'].replace("4.5","4")
-    dfMonthly['Length_of_time_running'] = dfMonthly['Length_of_time_running'].astype(int)
-    dfMonthly['Loan_cycle_fund_specific'] = dfMonthly['Loan_cycle_fund_specific'].replace("N",0)
-    dfMonthly['Loan_cycle_fund_specific'] = dfMonthly['Loan_cycle_fund_specific'].astype(int)
-    dfMonthly["Age_Group"] = np.where(dfMonthly["Age"] > 35, "Non Youth", "Youth")
-    
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly['Length_of_time_running'] = dfMonthly['Length_of_time_running'].replace("1 - 3","2")
+        dfMonthly['Length_of_time_running'] = dfMonthly['Length_of_time_running'].replace("4 - 5","4")
+        dfMonthly['Length_of_time_running'] = dfMonthly['Length_of_time_running'].replace("6 - 10","8")
+        dfMonthly['Length_of_time_running'] = dfMonthly['Length_of_time_running'].replace("Less than 1 year","1")
+        dfMonthly['Length_of_time_running'] = dfMonthly['Length_of_time_running'].replace("More than 10 years","10")
+        dfMonthly['Length_of_time_running'] = dfMonthly['Length_of_time_running'].replace("More than 10","10")
+    except Exception as e:
+         st.write(e)
+         
+    try:
+        dfMonthly['Length_of_time_running'] = dfMonthly['Length_of_time_running'].replace("4.5","4")
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly['Length_of_time_running'] = dfMonthly['Length_of_time_running'].astype(int)
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly['Loan_cycle_fund_specific'] = dfMonthly['Loan_cycle_fund_specific'].replace("N",0)
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly['Loan_cycle_fund_specific'] = dfMonthly['Loan_cycle_fund_specific'].astype(int)
+    except Exception as e:
+         st.write(e)
+    try:
+        dfMonthly["Age_Group"] = np.where(dfMonthly["Age"] > 35, "Non Youth", "Youth")
+    except Exception as e:
+         st.write(e)
     
     # Create a dictionary of sectors and their key words
     sector_keywords = {
@@ -84,22 +178,25 @@ def pride(df):
     
     # Create a new column 'sector' and initialize with 'Other'
     dfMonthly['sector'] = 'not_defined'
-    
+
+    try:
     # Iterate over each row in the DataFrame
-    for index, row in dfMonthly.iterrows():
-        line_of_business = row['Sector'].lower()
+        for index, row in dfMonthly.iterrows():
+            line_of_business = row['Sector'].lower()
+            
+            # Check for each sector's keywords in the 'line_of_business' column
+            for sector, keywords in sector_keywords.items():
+                for keyword in keywords:
+                    if keyword in line_of_business:
+                        dfMonthly.at[index, 'sector'] = sector
+                        break  # Exit the loop once a sector is identified for the current row
         
-        # Check for each sector's keywords in the 'line_of_business' column
-        for sector, keywords in sector_keywords.items():
-            for keyword in keywords:
-                if keyword in line_of_business:
-                    dfMonthly.at[index, 'sector'] = sector
-                    break  # Exit the loop once a sector is identified for the current row
+        dfMonthly.drop(columns="Sector", inplace=True)
+        dfMonthly.rename(columns={'sector': 'Sector'}, inplace=True)
+    except Exception as e:
+         st.write(e)
     
-    dfMonthly.drop(columns="Sector", inplace=True)
-    dfMonthly.rename(columns={'sector': 'Sector'}, inplace=True)
-    
-    
+
     # Define your Districts and corresponding keywords
     district_keywords = {
             'Mbarara': ['mbarara', 'kinoni t/c', 'kitunguru', 'ruhunga','rubaya', 'bwizibwera', 'kakoba', 'rwebishekye', 
@@ -205,18 +302,19 @@ def pride(df):
     
     # Create a new column 'district' and initialize with 'Other'
     dfMonthly['District'] = 'Other'
-    
+    try:
     # Iterate over each row in the DataFrame
-    for index, row in dfMonthly.iterrows():
-        location = row['Location_of_borrower'].lower()
-        
-        # Check for each sector's keywords in the 'location' column
-        for district, keywords in district_keywords.items():
-            for keyword in keywords:
-                if keyword in location:
-                    dfMonthly.at[index, 'District'] = district
-                    break  # Exit the loop once a sector is identified for the current row
-    
+        for index, row in dfMonthly.iterrows():
+            location = row['Location_of_borrower'].lower()
+            
+            # Check for each sector's keywords in the 'location' column
+            for district, keywords in district_keywords.items():
+                for keyword in keywords:
+                    if keyword in location:
+                        dfMonthly.at[index, 'District'] = district
+                        break  # Exit the loop once a sector is identified for the current row
+    except Exception as e:
+         st.write(e)
     
     
     
@@ -239,18 +337,28 @@ def pride(df):
     dfMonthly['Region'] = 'Other'
     
     # Iterate over each row in the DataFrame
-    for index, row in dfMonthly.iterrows():
-        location = row['District'].lower()
-        
-        # Check for each district's keywords in the 'District' column
-        for region, district in region_keywords.items():
-            for keyword in district:
-                if keyword in location:
-                    dfMonthly.at[index, 'Region'] = region
-                    break  # Exit the loop once a sector is identified for the current row
 
+    try:
+        for index, row in dfMonthly.iterrows():
+            location = row['District'].lower()
+            
+            # Check for each district's keywords in the 'District' column
+            for region, district in region_keywords.items():
+                for keyword in district:
+                    if keyword in location:
+                        dfMonthly.at[index, 'Region'] = region
+                        break  # Exit the loop once a sector is identified for the current row
+    except Exception as e:
+         st.write(e)
+         
     df=dfMonthly
     return df
+
+
+
+
+
+
 
 ##Premier Credit Data Cleaning Code
 def letshego(df):
