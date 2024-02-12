@@ -64,8 +64,16 @@ if add_sidebar == 'Data_Cleaning':
         if st.button("Click to Clean Data"):
             
             #Clean the data
+            #Data Cleaning for Pride 2 
+            if df['lender'].iloc[0] == 'Pride II':
+                df = gx.pride(df)
+                
+            #Data Cleaning for Pride 2 
+            elif df['lender'].iloc[0] == 'Pride Microfinance Ltd':
+                df = gx.pride(df)                
+                
             #Data Cleaning for Letshego 
-            if df['lender'].iloc[0] == 'Letshego Uganda':
+            elif df['lender'].iloc[0] == 'Letshego Uganda':
                 df = gx.letshego(df)
 
             #Data Cleaning for Mushanga SACCO 
