@@ -1724,7 +1724,7 @@ def Other(df):
         st.write(e)
     try:
         df = df.drop(columns =['id','name_of_borrower', 'email_of_borrower', 'highest_education_level',
-                                'employment_status', 'Loan_term_value','created','NIN', 'Phone_number','Line_of_business', 'Loan_purpose'])
+                               'employment_status', 'Loan_term_value','created','NIN', 'Phone_number'])
     except Exception as e:
         st.write(e)
     if df["Date_of_birth"].iloc[0] =='':
