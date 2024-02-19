@@ -9,6 +9,538 @@ import pandas as pd
 import numpy as np
 
 
+
+def Kyaps(df):
+    dfKYAPS=df
+    try:
+        deleted_columns=['id','NIN','Phone_number','name_of_borrower','email_of_borrower','highest_education_level','Date_of_birth','employment_status','created','Loan_term_value']
+        dfKYAPS=dfKYAPS.drop(columns=deleted_columns)
+    except Exception as e: 
+        st.write(e)
+    try:
+        dfKYAPS['sector'] = dfKYAPS['Line_of_business'] +' '+ dfKYAPS['Loan_purpose']
+    except Exception as e: 
+        st.write(e)
+    try:
+        dfKYAPS = dfKYAPS.drop(columns=['Line_of_business','Loan_purpose'])
+    except Exception as e: 
+        st.write(e)
+    try:
+        dfKYAPS['Date_of_loan_issue'] = pd.to_datetime(dfKYAPS['Date_of_loan_issue'], format='mixed', errors='coerce')
+    except Exception as e: 
+        st.write(e)
+    try:
+        dfKYAPS['Date_of_repayments_commencement'] = pd.to_datetime(dfKYAPS['Date_of_repayments_commencement'],format='mixed', errors='coerce')
+    except Exception as e: 
+        st.write(e)
+    try:
+        dfKYAPS['Interest_rate'] = dfKYAPS['Interest_rate'].replace(22,0.22)
+    except Exception as e: 
+        st.write(e)
+    try:
+        dfKYAPS["Person_with_disabilities"] = dfKYAPS["Person_with_disabilities"].replace(0,"No")
+    except Exception as e: 
+        st.write(e)
+    try:
+        dfKYAPS["Loan_type"] = dfKYAPS["Loan_type"].str.replace(" Client",'')
+    except Exception as e: 
+        st.write(e)
+    try:
+        dfKYAPS["Age_Group"] = np.where(dfKYAPS["Age"] > 35, "Non Youth", "Youth")
+    except Exception as e: 
+        st.write(e)
+    
+    
+    # Create a dictionary of sectors and their key words
+    sector_keywords = {
+        'Other': ['purchase of assets', 'marketing', 'restructuring of facility','memebership organisations','auto richshaw',
+                  'portfolio', 'Portfolio Concentration', 'other activities', 'other services buying stock'],
+        'Enterprise/Business Development': ["trade",'merchandise','fertilizer & insecticide','stall','cottage industry',
+                                            'trading','retail','boutique','wholesale','hawk','business','working capital', 'sell',
+                                            'shop', 'agribusiness','buying stock','textiles,apparel and leather clothing','propriet'],
+        'Agriculture': ['agricult','crops', 'productionmaize','production rice', 'agro products','animal', 'farm', 'rearing', 
+                        'vegetable', 'fish','poultry','coffee','beef','cattle','banana','livestock','agro input','maize','agri',
+                        'sugar cane production','diary production','fattening'],
+        'Technology': ['technology', 'software', 'hardware'],
+        'Finance / Financial Services': ['financ', 'banking', 'investment', 'mobile money', 'loan'],
+        'Health': ['health', 'medical', 'pharmac', 'diagnos','baby'],
+        'Food & Beverage': ['bakery','maize processing','confection', 'fast food', 'restaurant', 'baker', 'cook'],
+        'Manufacturing': ['manufactur','factory'],
+        'Education & Skills': ['educat','school','tuition','train'],
+        'Refugees & Displaced Populations': ['refugee'],
+        'Tourism & Hospitality': ['hotel'],
+        'Innovation': ['handicraft', 'furniture','bamboo'],
+        'Services': ['saloon','laundry','mechanic', 'tailor', 'beauty', 'print', 'weaving'],
+        'Energy': ["coal", 'oil mill','energy'],
+        'Digital Economy': ["fax", 'digital economy'],
+        'Construction & Estates': ["rent",'construct', 'estate','house renovation','house completion'],
+        'Transport': ['transport', 'boda', 'motorcycle'],
+        'Mining': ['mining', 'mineral','quarry'],
+        # Add more sectors and their associated keywords as needed
+    }
+    
+    # Create a new column 'sector' and initialize with 'Other'
+    dfKYAPS['Sector'] = 'not_defined'
+
+    try:
+        # Iterate over each row in the DataFrame
+        for index, row in dfKYAPS.iterrows():
+            line_of_business = row['sector'].lower()
+            
+            # Check for each sector's keywords in the 'line_of_business' column
+            for sector, keywords in sector_keywords.items():
+                for keyword in keywords:
+                    if keyword in line_of_business:
+                        dfKYAPS.at[index, 'Sector'] = sector
+                        break  # Exit the loop once a sector is identified for the current row
+    except Exception as e: 
+        st.write(e)
+    
+    
+    # Define your Districts and corresponding keywords
+    district_keywords = {
+            'Mbarara': ['mbarara', 'kinoni t/c', 'kitunguru', 'ruhunga','rubaya', 'bwizibwera', 'kakoba', 'rwebishekye', 
+                        'rwanyamahembe', 'kakoba', 'rwentondo', 'rubingo','rukiro', 'kashari', 'rwentojo', 'nyarubungo','bukiro',
+                        'katyazo', 'rutooma', 'ngango','kagongi', 'nkaaka', 'rugarama','katete','nyamitanga', 'mwizi','rwampara',
+                        'omukagyera,','mirongo','Kashare', 'omukagyera','kamushoko', 'bubaare','kyantamba', 'rwanyampazi','kamukuzi',
+                       'kashaka','kobwoba','igorora t/c','ntuura','kashenyi','nyabisirira','rubindi','byanamira','nchune','kariro',
+                        'rwebikoona','mitoozo','bunenero','nyantungu'],
+            'Kampala': ['kampala', 'ben kiwanuka', 'nateete', 'katwe','city centre','kawempe','kabalagala','nakulabye','nakawa',
+                        'entebbe road','kalerwe','bulenga','kansanga','wandegeya', 'ntinda', 'acacia', 'bukoto', 'najjanankumbi','makindye','najja','kitintale','kibuli','kasubi'],
+            'Kiruhura': ['kiruhura', 'kasaana', 'kinoni', 'rushere', 'kyabagyenyi','shwerenkye','kayonza', 'kikatsi',
+                         'kihwa','kiguma','burunga','rwanyangwe','nyakashashara','ekikoni'],
+            'Ibanda': ['ibanda', 'katongore','bihanga', 'rwetweka','mushunga','ishongororo', 'kikyenkye','nyakigando','nyarukiika',
+                       'kagongo','bwengure','kabaare'],
+            'Bushenyi': ['ishaka', 'bushen', 'kijumo','kabare','kakanju', 'nyamirembe','nkanga','nyabubare','bwekingo'],
+            'Isingiro': ['isingiro', 'bushozi','Kabaare','ngarama','rwembogo','kabuyanda'],
+            'Kazo': ['kazo', 'magondo', 'rwemikoma', 'kyabahura' 'Kyenshebashebe','ntambazi','kyabahura'],
+            'Wakiso': ['wakiso', 'kyaliwajjala', 'nansana', 'entebbe', 'abayita', 'kireka', 'matuga','kyengera','kasangati','bweyogerere'],
+            'Kibingo': ['buringo', 'masheruka','bwayegamba'],
+            'Sheema': ['sheema','kabwohe', 'rwanama','mashojwa'],
+            'Ntungamo': ['ntungamo','ntugam','kyaruhanga','rubaare','katomi'],
+            'Rukiga': ['rukiga', 'nyakambu','rwenyangye','kamwezi'],
+            'Kamwenge': ['kamwenge', 'kyabandara','bwizi t c','kamwen'],
+            'Masaka': ['masaka','nyendo'],
+            'Rukungiri': ['rukungiri','kihihi'],
+            'Iganga': ['iganga'],
+            'Amuria':['amuria'],
+            'Buikwe': ['buikwe','lugazi'],
+            'Bugiri': ['bugiri'],
+            'Soroti': ['soroti'],
+            'Kagadi':['kagadi'],
+            'Kabale': ['kabale', 'nyakashebeya'],
+            'Gulu': ['gulu'],
+            'Kayunga': ['kayunga'],
+            'Mbale': ['mbale','magale','nakaloke'],
+            'Pader': ['pader'],
+            'Kamuli': ['kamuli','namwendwa'],
+            'Namayingo': ['namayingo'],
+            'Koboko': ['koboko'],
+            'Mityana': ['mityana'],
+            'Hoima': ['hoima'],
+            'Nakasongola': ['nakasongola'],
+            'Kasese': ['kasese', 'bwera'],
+            'Lira': ['lira','Namutumba'],
+            'Mukono': ['mukono','seeta','kalagi'],
+            'Kyenjojo': ['kyenjojo'],
+            'Masindi': ['masindi'],
+            'Buhweju': ['buhweju','kabegaramire'],
+            'Butambala': ['butambala','kalamba'],
+            'Rakai': ['rakai'],
+            'Mpigi': ['mpigi','buwama'],
+            'Sembabule': ['sembabule', 'sembambule'],
+            'Arua': ['arua'],
+            'Rubanda': ['rubanda'],
+            'Gomba': ['gomba'],
+            'Bundibugyo': ['bundibugyo'],
+            'Kiryandongo': ['kiryandongo', 'bweyale'],
+            'Oyam': ['oyam'],
+            'Mitooma': ['mitooma'],
+            'Rubirizi': ['rubirizi','kichwamba'],
+            'Lyantonde': ['lyantonde'],
+            'Bukwo': ['bukwo','bukwa'],
+            'Busia': ['busia'],
+            'Mubende': ['mubende','kasambya'],
+            'Kitagwenda': ['kitagwenda'],
+            'Lwengo': ['lwengo','mbirizi'],
+            'Mayuge': ['mayuge','musita'],
+            'Sironko': ['sironko'],
+            'Kibaale': ['kibale', 'kibaale'],
+            'Bukomansimbi': ['bukomansimbi'],
+            'Budaka': ['budaka'],
+            'Kole': ['kole'],
+            'Fort Portal':['fort port','rwimi'],
+            'Bulambuli': ['bulambuli'],
+            'Luwero': ['luwero','wobulenzi'],
+            'Tororo': ['tororo'],
+            'Serere': ['serere'],
+            'Bunyangabu': ['bunyangabu'],
+            'Pallisa': ['pallisa'],
+            'Manafwa': ['manafwa'],
+            'Kalungu': ['kalungu','lukaya'],
+            'Kyegegwa': ['kyegegwa'],
+            'Kumi': ['kumi'],
+            'Kakumiro': ['kakumiro','igayaza'],
+            'Kitgum': ['kitgum'],
+            'Kanungu': ['kanung'],
+            'Kiboga': ['kiboga'],
+            'Kapchorwa': ['kapchorwa'],
+            'Kween':['kween'],
+            'Kaliro': ['kaliro'],
+            'Dokolo': ['dokolo'],
+            'Apac': ['apac'],
+            'Kabalore': ['nyamirima'],
+            'Zombo': ['zombo', 'paidha'],
+            'Nebbi': ['nebbi'],
+            'Alebtong':['alebtong'],
+            'Kibuku':['kibuku'],
+            'Kyotera': ['kyotera','buwenge'],
+            'Jinja': ['jinja'],
+            'Kabarole': ['kabarole'],
+            'Namutumba': ['namutumba'],
+            'Luuka':['luuka'],
+            'Kisoro':['kisoro','muhanga'],
+            'Buvuma': ['buvuma']
+        
+        # Add more districts and their associated keywords as needed
+    }
+    
+    # Create a new column 'district' and initialize with 'Other'
+    dfKYAPS['District'] = 'Other'
+
+    try:
+    # Iterate over each row in the DataFrame
+        for index, row in dfKYAPS.iterrows():
+            location = row['Location_of_borrower'].lower()
+            
+            # Check for each sector's keywords in the 'location' column
+            for district, keywords in district_keywords.items():
+                for keyword in keywords:
+                    if keyword in location:
+                        dfKYAPS.at[index, 'District'] = district
+                        break  # Exit the loop once a sector is identified for the current row
+    
+    except Exception as e: 
+        st.write(e)
+
+    region_keywords = {
+            'Western': ['mbarara','fort portal','kagadi','kabale','rukungiri','ibanda','bushenyi','hoima','kyenjojo','kasese',
+                        'masindi','kisoro','sheema','isingiro','buhweju','kibaale','kitagwenda','kamwenge','rubanda','ntungamo','kiruhura',
+                       'bundibugyo','kiryandongo','rubirizi','bunyangabu','rukiga','kyegegwa','kanungu','kazo','mitooma','kabalore',
+                       'kibingo','kabarole'],
+            'Eastern': ['jinja','kween','iganga','bugiri','soroti','mbale','kamuli','namayingo','sironko','budaka','busia','bukwo',
+                        'bulambuli','tororo','serere','pallisa','manafwa','kumi','kapchorwa','kaliro','kibuku','luuka'],
+            'Central': ['kampala','luwero','kyotera','masaka','kayunga','mityana','sembabule','nakasongola','mukono','bukomansimbi',
+                       'rakai','wakiso','mpigi','buikwe','gomba','lwengo','mayuge','butambala','lyantonde','mubende','kalungu',
+                        'kiboga','butambala','buvuma'],
+            'Northern': ['gulu','pader','koboko','lira','arua','oyam','kole','zombo','nebbi','kitgum','dokolo','apac','alebtong',
+                         'amuria','namutumba']
+    
+        # Add more regions and their associated keywords as needed
+    }
+    
+    # Create a new column 'region' and initialize with 'Other'
+    dfKYAPS['Region'] = 'Other'
+
+    try:
+        # Iterate over each row in the DataFrame
+        for index, row in dfKYAPS.iterrows():
+            location = row['District'].lower()
+            
+            # Check for each district's keywords in the 'District' column
+            for region, district in region_keywords.items():
+                for keyword in district:
+                    if keyword in location:
+                        dfKYAPS.at[index, 'Region'] = region
+                        break  # Exit the loop once a sector is identified for the current row
+    except Exception as e: 
+        st.write(e)
+
+    df=dfKYAPS
+    return df
+
+
+
+def ASA(df):
+    dfASA=df
+    try:
+        deleted_columns=['id','NIN','Phone_number','name_of_borrower','email_of_borrower','highest_education_level','employment_status','created','Age','Loan_term_value']
+        dfASA=dfASA.drop(columns=deleted_columns)
+    except Exception as e:
+        st.write(e)
+    try:
+        dfASA['sector'] = dfASA['Line_of_business'] +' '+ dfASA['Loan_purpose']
+        dfASA = dfASA.drop(columns=['Line_of_business','Loan_purpose'])
+    except Exception as e:
+        st.write(e)
+    try:
+        dfASA['Date_of_birth'] = pd.to_datetime(dfASA['Date_of_birth'], format='mixed', errors='coerce')
+    except Exception as e:
+        st.write(e)
+    try:
+        dfASA['Date_of_loan_issue'] = pd.to_datetime(dfASA['Date_of_loan_issue'], format='mixed', errors='coerce')
+    except Exception as e:
+        st.write(e)
+    try:
+        dfASA['Age'] = dfASA['Date_of_loan_issue'].dt.year - dfASA['Date_of_birth'].dt.year
+    except Exception as e:
+        st.write(e)
+    try:
+        dfASA = dfASA.drop(columns=['Date_of_birth'])
+    except Exception as e:
+        st.write(e)
+    try:
+        dfASA['Date_of_repayments_commencement'] = pd.to_datetime(dfASA['Date_of_repayments_commencement'],format='mixed', errors='coerce')
+    except Exception as e:
+        st.write(e)
+    try:
+        dfASA['Interest_rate'] = dfASA['Interest_rate'].replace(0.09,0.27)
+    except Exception as e:
+        st.write(e)
+    try:
+        dfASA['Length_of_time_running']=dfASA['Length_of_time_running'].str.lower()
+    except Exception as e:
+        st.write(e)
+    try:
+        dfASA['Length_of_time_running'] = dfASA['Length_of_time_running'].str.replace("16weeks", "")
+        dfASA['Length_of_time_running'] = dfASA['Length_of_time_running'].str.replace("year", "")
+        dfASA['Length_of_time_running'] = dfASA['Length_of_time_running'].str.replace("yr", "")
+        dfASA['Length_of_time_running'] = dfASA['Length_of_time_running'].str.replace("s", "")
+        dfASA['Length_of_time_running'] = dfASA['Length_of_time_running'].str.replace("&half", "")
+        dfASA['Length_of_time_running'] = dfASA['Length_of_time_running'].str.replace("half", "")
+    except Exception as e:
+        st.write(e)
+    try:
+        dfASA['Length_of_time_running'] = pd.to_numeric(dfASA['Length_of_time_running'], errors='coerce')
+    except Exception as e:
+        st.write(e)
+    try:
+        dfASA["Previously_unemployed"] = (dfASA["Previously_unemployed"].str.lower()).str.replace("no","")
+    except Exception as e:
+        st.write(e)
+    try:
+        dfASA["Person_with_disabilities"] = dfASA["Person_with_disabilities"].str.capitalize()
+    except Exception as e:
+        st.write(e)
+    try:
+        dfASA["Age_Group"] = np.where(dfASA["Age"] > 35, "Non Youth", "Youth")
+    except Exception as e:
+        st.write(e)
+    
+    
+    
+    # Create a dictionary of sectors and their key words
+    sector_keywords = {
+        'Other': ['purchase of assets', 'marketing', 'restructuring of facility','memebership organisations','auto richshaw',
+                  'portfolio', 'Portfolio Concentration', 'other activities', 'other services buying stock'],
+        'Enterprise/Business Development': ["trade",'merchandise','fertilizer & insecticide','stall','cottage industry',
+                                            'trading','retail','boutique','wholesale','hawk','business','working capital', 'sell',
+                                            'shop', 'agribusiness','buying stock','textiles,apparel and leather clothing'],
+        'Agriculture': ['agricult','crops', 'productionmaize','production rice', 'agro products','animal', 'farm', 'rearing', 
+                        'vegetable', 'fish','poultry','coffee','beef','cattle','banana','livestock','agro input','maize','agri',
+                        'sugar cane production','diary production','fattening'],
+        'Technology': ['technology', 'software', 'hardware'],
+        'Finance / Financial Services': ['financ', 'banking', 'investment', 'mobile money', 'loan'],
+        'Health': ['health', 'medical', 'pharmac', 'diagnos','baby'],
+        'Food & Beverage': ['bakery','maize processing','confection', 'fast food', 'restaurant', 'baker', 'cook'],
+        'Manufacturing': ['manufactur','factory'],
+        'Education & Skills': ['educat','school','tuition','train'],
+        'Refugees & Displaced Populations': ['refugee'],
+        'Tourism & Hospitality': ['hotel'],
+        'Innovation': ['handicraft', 'furniture','bamboo'],
+        'Services': ['saloon','laundry','mechanic', 'tailor', 'beauty', 'print', 'weaving'],
+        'Energy': ["coal", 'oil mill','energy'],
+        'Digital Economy': ["fax", 'digital economy'],
+        'Construction & Estates': ["rent",'construct', 'estate','house renovation','house completion'],
+        'Transport': ['transport', 'boda', 'motorcycle'],
+        'Mining': ['mining', 'mineral','quarry'],
+        # Add more sectors and their associated keywords as needed
+    }
+    
+    # Create a new column 'sector' and initialize with 'Other'
+    dfASA['Sector'] = 'not_defined'
+    
+    try:
+    # Iterate over each row in the DataFrame
+        for index, row in dfASA.iterrows():
+            line_of_business = row['sector'].lower()
+            
+            # Check for each sector's keywords in the 'line_of_business' column
+            for sector, keywords in sector_keywords.items():
+                for keyword in keywords:
+                    if keyword in line_of_business:
+                        dfASA.at[index, 'Sector'] = sector
+                        break  # Exit the loop once a sector is identified for the current row
+    except Exception as e:
+        st.write(e)
+    
+    
+    # Define your Districts and corresponding keywords
+    district_keywords = {
+            'Mbarara': ['mbarara', 'kinoni t/c', 'kitunguru', 'ruhunga','rubaya', 'bwizibwera', 'kakoba', 'rwebishekye', 
+                        'rwanyamahembe', 'kakoba', 'rwentondo', 'rubingo','rukiro', 'kashari', 'rwentojo', 'nyarubungo','bukiro',
+                        'katyazo', 'rutooma', 'ngango','kagongi', 'nkaaka', 'rugarama','katete','nyamitanga', 'mwizi','rwampara',
+                        'omukagyera,','mirongo','Kashare', 'omukagyera','kamushoko', 'bubaare','kyantamba', 'rwanyampazi','kamukuzi',
+                       'kashaka','kobwoba','igorora t/c','ntuura','kashenyi','nyabisirira','rubindi','byanamira','nchune','kariro',
+                        'rwebikoona','mitoozo','bunenero','nyantungu'],
+            'Kampala': ['kampala', 'ben kiwanuka', 'nateete', 'katwe','city centre','kawempe','kabalagala','nakulabye','nakawa',
+                        'entebbe road','kalerwe','bulenga','kansanga','wandegeya', 'ntinda', 'acacia', 'bukoto', 'najjanankumbi','makindye','najja','kitintale','kibuli','kasubi'],
+            'Kiruhura': ['kiruhura', 'kasaana', 'kinoni', 'rushere', 'kyabagyenyi','shwerenkye','kayonza', 'kikatsi',
+                         'kihwa','kiguma','burunga','rwanyangwe','nyakashashara','ekikoni'],
+            'Ibanda': ['ibanda', 'katongore','bihanga', 'rwetweka','mushunga','ishongororo', 'kikyenkye','nyakigando','nyarukiika',
+                       'kagongo','bwengure','kabaare'],
+            'Bushenyi': ['ishaka', 'bushenyi', 'kijumo','kabare','kakanju', 'nyamirembe','nkanga','nyabubare','bwekingo'],
+            'Isingiro': ['isingiro', 'bushozi','Kabaare','ngarama','rwembogo','kabuyanda','bushen'],
+            'Kazo': ['kazo', 'magondo', 'rwemikoma', 'kyabahura' 'Kyenshebashebe','ntambazi','kyabahura'],
+            'Wakiso': ['wakiso', 'kyaliwajjala', 'nansana', 'entebbe', 'abayita', 'kireka', 'matuga','kyengera','kasangati','bweyogerere'],
+            'Kibingo': ['buringo', 'masheruka','bwayegamba'],
+            'Sheema': ['sheema','kabwohe', 'rwanama','mashojwa'],
+            'Ntungamo': ['ntungamo','ntugam','kyaruhanga','rubaare','katomi'],
+            'Rukiga': ['rukiga', 'nyakambu','rwenyangye','kamwezi'],
+            'Kamwenge': ['kamwenge', 'kyabandara','bwizi t c','kamwen'],
+            'Masaka': ['masaka','nyendo'],
+            'Rukungiri': ['rukungiri','kihihi'],
+            'Iganga': ['iganga'],
+            'Amuria':['amuria'],
+            'Buikwe': ['buikwe','lugazi'],
+            'Bugiri': ['bugiri'],
+            'Soroti': ['soroti'],
+            'Kagadi':['kagadi'],
+            'Kabale': ['kabale', 'nyakashebeya'],
+            'Gulu': ['gulu'],
+            'Kayunga': ['kayunga'],
+            'Mbale': ['mbale','magale','nakaloke'],
+            'Pader': ['pader'],
+            'Kamuli': ['kamuli','namwendwa'],
+            'Namayingo': ['namayingo'],
+            'Koboko': ['koboko'],
+            'Mityana': ['mityana'],
+            'Hoima': ['hoima'],
+            'Nakasongola': ['nakasongola'],
+            'Kasese': ['kasese', 'bwera'],
+            'Lira': ['lira','Namutumba'],
+            'Mukono': ['mukono','seeta','kalagi'],
+            'Kyenjojo': ['kyenjojo'],
+            'Masindi': ['masindi'],
+            'Buhweju': ['buhweju','kabegaramire'],
+            'Butambala': ['butambala','kalamba'],
+            'Rakai': ['rakai'],
+            'Mpigi': ['mpigi','buwama'],
+            'Sembabule': ['sembabule', 'sembambule'],
+            'Arua': ['arua'],
+            'Rubanda': ['rubanda'],
+            'Gomba': ['gomba'],
+            'Bundibugyo': ['bundibugyo'],
+            'Kiryandongo': ['kiryandongo', 'bweyale'],
+            'Oyam': ['oyam'],
+            'Mitooma': ['mitooma'],
+            'Rubirizi': ['rubirizi','kichwamba'],
+            'Lyantonde': ['lyantonde'],
+            'Bukwo': ['bukwo','bukwa'],
+            'Busia': ['busia'],
+            'Mubende': ['mubende','kasambya'],
+            'Kitagwenda': ['kitagwenda'],
+            'Lwengo': ['lwengo','mbirizi'],
+            'Mayuge': ['mayuge','musita'],
+            'Sironko': ['sironko'],
+            'Kibaale': ['kibale', 'kibaale'],
+            'Bukomansimbi': ['bukomansimbi'],
+            'Budaka': ['budaka'],
+            'Kole': ['kole'],
+            'Fort Portal':['fort port','rwimi'],
+            'Bulambuli': ['bulambuli'],
+            'Luwero': ['luwero','wobulenzi'],
+            'Tororo': ['tororo'],
+            'Serere': ['serere'],
+            'Bunyangabu': ['bunyangabu'],
+            'Pallisa': ['pallisa'],
+            'Manafwa': ['manafwa'],
+            'Kalungu': ['kalungu','lukaya'],
+            'Kyegegwa': ['kyegegwa'],
+            'Kumi': ['kumi'],
+            'Kakumiro': ['kakumiro','igayaza'],
+            'Kitgum': ['kitgum'],
+            'Kanungu': ['kanung'],
+            'Kiboga': ['kiboga'],
+            'Kapchorwa': ['kapchorwa'],
+            'Kween':['kween'],
+            'Kaliro': ['kaliro'],
+            'Dokolo': ['dokolo'],
+            'Apac': ['apac'],
+            'Kabalore': ['nyamirima'],
+            'Zombo': ['zombo', 'paidha'],
+            'Nebbi': ['nebbi'],
+            'Alebtong':['alebtong'],
+            'Kibuku':['kibuku'],
+            'Kyotera': ['kyotera','buwenge'],
+            'Jinja': ['jinja'],
+            'Kabarole': ['kabarole'],
+            'Namutumba': ['namutumba'],
+            'Luuka':['luuka'],
+            'Kisoro':['kisoro','muhanga'],
+            'Buvuma': ['buvuma']
+        
+        # Add more districts and their associated keywords as needed
+    }
+    
+    # Create a new column 'district' and initialize with 'Other'
+    dfASA['District'] = 'Other'
+
+    try:
+        # Iterate over each row in the DataFrame
+        for index, row in dfASA.iterrows():
+            location = row['Location_of_borrower'].lower()
+            
+            # Check for each sector's keywords in the 'location' column
+            for district, keywords in district_keywords.items():
+                for keyword in keywords:
+                    if keyword in location:
+                        dfASA.at[index, 'District'] = district
+                        break  # Exit the loop once a sector is identified for the current row
+    
+    except Exception as e:
+        st.write(e)
+    
+    
+    region_keywords = {
+            'Western': ['mbarara','fort portal','kagadi','kabale','rukungiri','ibanda','bushenyi','hoima','kyenjojo','kasese',
+                        'masindi','kisoro','sheema','isingiro','buhweju','kibaale','kitagwenda','kamwenge','rubanda','ntungamo','kiruhura',
+                       'bundibugyo','kiryandongo','rubirizi','bunyangabu','rukiga','kyegegwa','kanungu','kazo','mitooma','kabalore',
+                       'kibingo','kabarole'],
+            'Eastern': ['jinja','kween','iganga','bugiri','soroti','mbale','kamuli','namayingo','sironko','budaka','busia','bukwo',
+                        'bulambuli','tororo','serere','pallisa','manafwa','kumi','kapchorwa','kaliro','kibuku','luuka'],
+            'Central': ['kampala','luwero','kyotera','masaka','kayunga','mityana','sembabule','nakasongola','mukono','bukomansimbi',
+                       'rakai','wakiso','mpigi','buikwe','gomba','lwengo','mayuge','butambala','lyantonde','mubende','kalungu',
+                        'kiboga','butambala','buvuma'],
+            'Northern': ['gulu','pader','koboko','lira','arua','oyam','kole','zombo','nebbi','kitgum','dokolo','apac','alebtong',
+                         'amuria','namutumba']
+    
+        # Add more regions and their associated keywords as needed
+    }
+    
+    # Create a new column 'region' and initialize with 'Other'
+    dfASA['Region'] = 'Other'
+
+    try:
+    # Iterate over each row in the DataFrame
+        for index, row in dfASA.iterrows():
+            location = row['District'].lower()
+            
+            # Check for each district's keywords in the 'District' column
+            for region, district in region_keywords.items():
+                for keyword in district:
+                    if keyword in location:
+                        dfASA.at[index, 'Region'] = region
+                        break  # Exit the loop once a sector is identified for the current row
+    except Exception as e:
+        st.write(e)            
+    df = dfASA
+    return df
+
+
+
+
+
 def pride(df):
     dfMonthly=df
     deleted_columns=['id','NIN','Phone_number','name_of_borrower','email_of_borrower','highest_education_level','employment_status','created','Age','Loan_term_value']
@@ -25,7 +557,7 @@ def pride(df):
     except Exception as e:
         st.write(e)
     try:
-        dfMonthly['Sector'] = dfMonthly['Line_of_business'] +' '+ dfMonthly['Loan_purpose']
+        dfMonthly['sector'] = dfMonthly['Line_of_business'] +' '+ dfMonthly['Loan_purpose']
     except Exception as e:
          st.write(e)
     try:    
@@ -177,22 +709,20 @@ def pride(df):
     }
     
     # Create a new column 'sector' and initialize with 'Other'
-    dfMonthly['sector'] = 'not_defined'
+    dfMonthly['Sector'] = 'not_defined'
 
     try:
     # Iterate over each row in the DataFrame
         for index, row in dfMonthly.iterrows():
-            line_of_business = row['Sector'].lower()
+            line_of_business = row['sector'].lower()
             
             # Check for each sector's keywords in the 'line_of_business' column
             for sector, keywords in sector_keywords.items():
                 for keyword in keywords:
                     if keyword in line_of_business:
-                        dfMonthly.at[index, 'sector'] = sector
+                        dfMonthly.at[index, 'Sector'] = sector
                         break  # Exit the loop once a sector is identified for the current row
-        
-        dfMonthly.drop(columns="Sector", inplace=True)
-        dfMonthly.rename(columns={'sector': 'Sector'}, inplace=True)
+                        
     except Exception as e:
          st.write(e)
     
@@ -358,8 +888,6 @@ def pride(df):
 
 
 
-
-
 ##Premier Credit Data Cleaning Code
 def letshego(df):
     deleted_columns=['id','NIN','Phone_number','name_of_borrower','email_of_borrower','highest_education_level',
@@ -377,7 +905,7 @@ def letshego(df):
     except Exception as e:
         st.write(e)
     try:
-        df['Sector'] = df['Line_of_business'] +' '+ df['Loan_purpose']
+        df['sector'] = df['Line_of_business'] +' '+ df['Loan_purpose']
     except Exception as e:
         st.write(e)
     try:
@@ -463,23 +991,21 @@ def letshego(df):
     
     # Create a new column 'sector' and initialize with 'Other'
     try:
-        df['sector'] = 'not_defined'
+        df['Sector'] = 'not_defined'
     except Exception as e:
         st.write(e)
     try:
     # Iterate over each row in the DataFrame
         for index, row in df.iterrows():
-            line_of_business = row['Sector'].lower()
+            line_of_business = row['sector'].lower()
             
             # Check for each sector's keywords in the 'line_of_business' column
             for sector, keywords in sector_keywords.items():
                 for keyword in keywords:
                     if keyword in line_of_business:
-                        df.at[index, 'sector'] = sector
+                        df.at[index, 'Sector'] = sector
                         break  # Exit the loop once a sector is identified for the current row
-    
-        df.drop(columns="Sector", inplace=True)
-        df.rename(columns={'sector': 'Sector'}, inplace=True)
+
     except Exception as e:
         st.write(e)
     

@@ -10,6 +10,7 @@ import pandas as pd
 import numpy as np
 import functions as fx
 import functions2 as gx
+import functions3 as hx
    
 
 #Develop DashBoard
@@ -64,31 +65,36 @@ if add_sidebar == 'Data_Cleaning':
         if st.button("Click to Clean Data"):
             
             #Clean the data
+            #Data Cleaning for Kyamuhunga
+            if df['lender'].iloc[0] == "Kyamuhunga People's SACCO":
+                df=gx.Kyaps(df)
+            #Data Cleaning for ASA
+            elif df['lender'].iloc[0] == 'ASA Microfinance':
+                df=gx.ASA(df)
             #Data Cleaning for Pride 2 
-            if df['lender'].iloc[0] == 'Pride II':
+            elif df['lender'].iloc[0] == 'Pride II':
                 df = gx.pride(df)
                 
             #Data Cleaning for Pride 2 
             elif df['lender'].iloc[0] == 'Pride Microfinance Ltd':
                 df = gx.pride(df)                
-                
             #Data Cleaning for Letshego 
             elif df['lender'].iloc[0] == 'Letshego Uganda':
                 df = gx.letshego(df)
 
             #Data Cleaning for Mushanga SACCO 
             elif df['lender'].iloc[0] == 'Mushanga SACCO':
-                df = fx.Mushanga(df)
+                df = hx.Mushanga(df)
             #Data Cleaning for Butuuro SACCO                   
             elif df['lender'].iloc[0] == 'Butuuro SACCO':
                 df = fx.Butuuro(df)
             #Data Cleaning for Premier Credit 
             elif df['lender'].iloc[0] == 'Premier Credit':            
-                df = fx.Premier(df)
+                df = hx.Premier(df)
                 
             #Data Cleaning for Finca
             elif df['lender'].iloc[0] == 'FINCA Uganda':
-                df = fx.Finca(df)
+                df = hx.Finca(df)
                 
             #Data Cleaning for Lyamujungu SACCO
             elif df['lender'].iloc[0] == 'Lyamujungu SACCO':
@@ -106,7 +112,10 @@ if add_sidebar == 'Data_Cleaning':
             #Data Cleaning Code for Other PFI                  
             else:
                df = fx.Other(df)
-                
+            
+            
+            if len(df['Sector'][df['Sector']=='not_defined']) == 0:
+                df.drop(columns="sector", inplace=True)
 
 
 
