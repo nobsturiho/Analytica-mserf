@@ -143,7 +143,7 @@ if add_sidebar == 'Data_Cleaning':
                 st.download_button(
                     label="Click to Download Clean File",
                     data=df.to_csv(index=False),  # Convert DataFrame to Excel data
-                    file_name= f"{lender}_{month}_Clean_Data.csv",  # Set file name
+                    file_name= f"{lender}_{month} {df['year'].iloc[0]}_Clean_Data.csv",  # Set file name
                 )
                 
                 
