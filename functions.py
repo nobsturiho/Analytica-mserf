@@ -860,7 +860,9 @@ def VF(df):
             "Kyankwanzi": ["kyankwanzi"],
             "Kasanda": ["kasanda"],
             'Luuka': ['luuka'],
-            'Kaberamaido':['kaberimaido']
+            'Kaberamaido':['kaberimaido'],
+            'Ngora': ['ngora']
+            
             
         # Add more districts and their associated keywords as needed
     }
@@ -888,7 +890,7 @@ def VF(df):
                         'kibingo','kabarole'],
             'Eastern': ['jinja','iganga','bugiri','soroti','mbale','kamuli','namayingo','sironko','budaka','busia','bukwo',
                         'bulambuli','tororo','serere','pallisa','manafwa','kumi','kapchorwa','kaliro','kibuku','katakwi',"amuria",
-                        "bududa",'bukedea','luuka','kaberamaido'],
+                        "bududa",'bukedea','luuka','kaberamaido','ngora'],
             'Central': ['kampala','luwero','kyotera','masaka','kayunga','mityana','sembabule','nakasongola','mukono','bukomansimbi',
                         'rakai','wakiso','mpigi','buikwe','gomba','lwengo','mayuge','butambala','lyantonde','mubende','kalungu',
                         'kiboga','butambala','buvuma','nakaseke','kyankwanzi','kasanda'],
