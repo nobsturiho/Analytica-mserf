@@ -375,7 +375,7 @@ def Lyamujungu(df):
             'Western': ['mbarara','fort portal','kagadi','kabale','rukungiri','ibanda','bushenyi','hoima','kyenjojo','kasese',
                         'masindi','sheema','isingiro','buhweju','kibaale','kitagwenda','kamwenge','rubanda','ntungamo','kiruhura',
                         'bundibugyo','kiryandongo','rubirizi','bunyangabu','rukiga','kyegegwa','kanungu','kazo','mitooma','kabalore',
-                        'kibingo','kabarole'],
+                        'kibingo','kabarole','rubanda'],
 
         # Add more regions and their associated keywords as needed
     }
