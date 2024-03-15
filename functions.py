@@ -411,7 +411,7 @@ def Flow(df):
 
     try:
         df = df.drop(columns =['id','name_of_borrower', 'email_of_borrower', 'highest_education_level','Line_of_business', 'Loan_purpose',
-                                'employment_status', 'Loan_term_value','created','NIN', 'Phone_number', "Date_of_birth"])
+                                'employment_status', 'Loan_term_value','created','NIN', 'Phone_number'])
     except Exception as e:
         st.write(e)
     try:
@@ -442,6 +442,12 @@ def Flow(df):
         df["Date_of_repayments_commencement"] = pd.to_datetime(df["Date_of_repayments_commencement"])
     except Exception as e:
         st.write(e)
+    try:
+        df["Date_of_birth"] = pd.to_datetime(df["Date_of_birth"])
+        df["Age"] = (((df["Date_of_loan_issue"] - df["Date_of_birth"]).dt.days)//365.25).astype('Int64')
+    except Exception as e:
+        st.write(e)
+    df=df.drop(columns = ["Date_of_birth"])
     try:
         df['Gender'] = df['Gender'].str.title()
     except Exception as e:
