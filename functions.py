@@ -605,7 +605,15 @@ def Flow(df):
             'Iganga': ['iganga'],
             'Buyende': ['buyende'],
             'Ngora': ['ngora'],
-            'Busia': ['busia']
+            'Busia': ['busia'],
+            'Otuke': ['otuke'],
+            'Namutumba': ['namutumba'],
+            'Bugweri': ['bugweri'],
+            'Namisindwa': ['namisindwa'],
+            'Amudat': ['amudat'],
+            'Katakwi': ['katakwi'],
+            'Pakwach': ['pakwach'],
+            'Abim': ['abim']
 
         # Add more districts and their associated keywords as needed
     }
@@ -631,10 +639,11 @@ def Flow(df):
     
             'Eastern': ['jinja','iganga','bugiri','soroti','mbale','kamuli','namayingo','sironko','budaka','busia','bukwo',
                         'bulambuli','tororo','serere','pallisa','manafwa','kumi','kapchorwa','kaliro','kibuku','katakwi',"amuria",
-                        "bududa",'bukedea','luuka', 'kaberamaido','butaleja','iganga','ngora','buikwe','mayuge','buyende'],
+                        "bududa",'bukedea','luuka', 'kaberamaido','butaleja','iganga','ngora','buikwe','mayuge','buyende','iganga','ngora','buikwe','mayuge','namisindwa',
+                        'bugweri','katakwi'],
     
             'Northern': ['gulu','pader','koboko','lira','arua','oyam','kole','zombo','nebbi','kitgum','dokolo','apac','alebtong',
-                        'yumbe',"obongi","moyo", 'adjumani','omoro','amuru','amolatar']
+                        'yumbe',"obongi","moyo", 'adjumani','omoro','amuru','amolatar','otuke','namutumba','amudat','pakwach','abim']
     
         # Add more regions and their associated keywords as needed
     }
