@@ -348,7 +348,7 @@ def Lyamujungu(df):
             'Kole': ['kole'],
             'Fort Portal':['fort portal'],
             'Kanungu': ['kanungu'],
-            'Rukiga': ['rukiga']
+            'Rubanda': ['rubanda']
         
         # Add more districts and their associated keywords as needed
     }
